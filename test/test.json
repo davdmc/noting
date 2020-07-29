@@ -1,0 +1,21 @@
+{
+  "name": "SessionName",
+  "date": "2020-1-1",
+  "contents": [
+    {
+      "name": "Note 1",
+      "noteType": "note",
+      "text": "This is the first note created"
+    },
+    {
+      "name": "Note 2",
+      "noteType": "note",
+      "text": "This is the second note burroloco"
+    },
+    {
+      "name": "Question 1",
+      "noteType": "question",
+      "text": "¿How is the world working?"
+    }
+  ]
+}
