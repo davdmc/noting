@@ -46,7 +46,8 @@ class NotingUi(QtWidgets.QMainWindow):
         # Shortcuts
         self.createNoteShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+N"), self._centralwidget)
         self.saveNoteShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+S"), self._centralwidget)
-        
+        self.saveSessionShortcut = QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+O"), self._centralwidget)
+
     def selectSessionDialog(self):
         item, ok = QtWidgets.QInputDialog.getItem(self._centralwidget, 'Open/New Session', 'Choose if you want to open a session or create a new one.', ["Open session", "New session"],editable=False)
         

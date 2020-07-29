@@ -11,6 +11,10 @@ class NotingModel(QtCore.QAbstractListModel):
         self._sessionPath = ""
         self.isActiveSession = False
         self.sessionInfo = {}
+
+        self.currentNote = None
+        self.currentIndex = None
+
         self._notes = []
 
     def setSessionPath(self, sessionPath):
@@ -24,15 +28,16 @@ class NotingModel(QtCore.QAbstractListModel):
                 return True
         else:
             self._createSession()
+
         self.isActiveSession = True
 
     def _createSession(self):
         """Create a new session and populate it with its name and todays date."""
         with open(path.join(self._sessionPath), 'w') as json_file:
-            sessionName = path.splitext(path.split(self._sessionPath)[-1])[0]
-            sessionDate = date.today().strftime("%Y-%m-%d")
-            initData = {'name': sessionName,
-                        'date': sessionDate, 'contents': []}
+            self.sessionInfo['name'] = path.splitext(path.split(self._sessionPath)[-1])[0]
+            self.sessionInfo['date'] = date.today().strftime("%Y-%m-%d")
+            initData = {'name': self.sessionInfo['name'],
+                        'date': self.sessionInfo['date'], 'contents': []}
             json.dump(initData, json_file)
 
     def _parseJson(self, data):
@@ -50,7 +55,8 @@ class NotingModel(QtCore.QAbstractListModel):
 
     def saveSession(self):
         """Save session in a JSON file."""
-        json.dump(self._parseSession(), self._sessionPath)
+        with open(self._sessionPath, 'w') as f:
+            json.dump(self._parseSession(), f)
 
     def _parseSession(self):
         """Parse the current data to a JSON file."""
@@ -77,17 +83,18 @@ class NotingModel(QtCore.QAbstractListModel):
     def openNote(self, index):
         """Make the note under the given index the current note and returns it."""
         self.currentNote = self._notes[index.row()]
-        self.currentIndex = index.row()
+        self.currentIndex = index
         return self.currentNote
 
     def addNote(self, note):
         """Add a new note and make it current note."""
         self.currentNote = note
-        self.currentIndex = self.index(self.rowCount(0) - 1)
-        self.beginInsertRows(self.currentIndex, self.currentIndex.row(), self.currentIndex.row() + 1)
-        self._notes.insert(self.currentIndex.row() + 1, self.currentNote)
+        index_tmp = self.index(self.rowCount(0) - 1)
+        self.beginInsertRows(index_tmp, index_tmp.row(), index_tmp.row() + 1)
+        self._notes.insert(index_tmp.row() + 1, self.currentNote)
         self.endInsertRows()
-        return self.currentIndex
+        self.currentIndex = self.index(self.rowCount(0) - 1)
+        #return self.currentIndex
 
     def saveNoteText(self, noteText):
         """Save the text on the current note."""
