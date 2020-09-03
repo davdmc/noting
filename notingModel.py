@@ -117,7 +117,7 @@ class NotingModel(QtCore.QAbstractListModel):
         self.beginInsertRows(self.index(0), currentLen - 1, currentLen)
         self._notes.insert(currentLen, self.currentNote)
         self.endInsertRows()
-        self.currentIndex = self.index(currentLen - 1)
+        self.currentIndex = self.index(currentLen)
         # return self.currentIndex
 
     def swapNote(self, direction):
