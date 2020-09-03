@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from os import path
 from notingModel import Note
-
+from pathlib import Path
 
 class NotingCtrl:
 
@@ -10,7 +10,8 @@ class NotingCtrl:
         self._view = view
         self._model = model
         self._path = path
-
+        
+        self._view.setWindowIcon(QtGui.QIcon(str(Path(__file__).parent.absolute()).join("NotingLogo.png")))
         # Choose if you want to open or create a new session.
         method = self._view.selectSessionDialog()
 
