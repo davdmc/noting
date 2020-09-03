@@ -28,7 +28,7 @@ def main():
     view = NotingUi()
     model = NotingModel()
 
-    control = NotingCtrl(model=model, view=view, path=DEFAULT_PATH)
+    control = NotingCtrl(model=model, view=view, defaultPath=DEFAULT_PATH)
 
     view.show()
     sys.exit(app.exec_())

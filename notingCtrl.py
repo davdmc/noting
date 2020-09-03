@@ -5,13 +5,14 @@ from pathlib import Path
 
 class NotingCtrl:
 
-    def __init__(self, model, view, path):
+    def __init__(self, model, view, defaultPath):
 
         self._view = view
         self._model = model
-        self._path = path
+        self._path = defaultPath
         
-        self._view.setWindowIcon(QtGui.QIcon(str(Path(__file__).parent.absolute()).join("NotingLogo.png")))
+        appPath = path.join(str(Path(__file__).parent.absolute()), "NotingLogo.ico")
+        self._view.setWindowIcon(QtGui.QIcon(appPath))
         # Choose if you want to open or create a new session.
         method = self._view.selectSessionDialog()
 
