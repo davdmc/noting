@@ -5,7 +5,7 @@ from datetime import date
 
 
 class NotingModel(QtCore.QAbstractListModel):
-
+    # TODO: Create enums for note status and session status: (saved/notSaved)
     def __init__(self, *args, **kwargs):
         super(NotingModel, self).__init__(*args, **kwargs)
         self._sessionPath = ""
@@ -21,6 +21,9 @@ class NotingModel(QtCore.QAbstractListModel):
         self._sessionPath = sessionPath
 
     def initSession(self):
+        """If there is a session with the same path open it. Otherwise, create a new one and populate it."""
+        self.resetSession()
+
         if path.isfile(self._sessionPath):
             with open(self._sessionPath) as json_file:
                 data = json.load(json_file)
@@ -31,10 +34,24 @@ class NotingModel(QtCore.QAbstractListModel):
 
         self.isActiveSession = True
 
+    def resetSession(self):
+        """Reset the data of the session in case of a later init"""
+
+        self.isActiveSession = False
+        self.sessionInfo = {}
+
+        self.currentNote = None
+        self.currentIndex = None
+        
+        self.beginResetModel()
+        self._notes = []
+        self.endResetModel()
+
     def _createSession(self):
         """Create a new session and populate it with its name and todays date."""
         with open(path.join(self._sessionPath), 'w') as json_file:
-            self.sessionInfo['name'] = path.splitext(path.split(self._sessionPath)[-1])[0]
+            self.sessionInfo['name'] = path.splitext(
+                path.split(self._sessionPath)[-1])[0]
             self.sessionInfo['date'] = date.today().strftime("%Y-%m-%d")
             initData = {'name': self.sessionInfo['name'],
                         'date': self.sessionInfo['date'], 'contents': []}
@@ -77,6 +94,11 @@ class NotingModel(QtCore.QAbstractListModel):
     def data(self, index, role):
         """Returns the data stored under the given role for 
         the item referred to by the index."""
+        colorDict = {'note': QtGui.QColor('#8BC34A'), 'question': QtGui.QColor(
+            '#FF5722'), 'task': QtGui.QColor('#FFEB3B')}
+
+        if role == QtCore.Qt.BackgroundRole:
+            return QtGui.QBrush(colorDict[self._notes[index.row()].noteType])
         if role == QtCore.Qt.DisplayRole:
             return self._notes[index.row()].name
 
@@ -89,12 +111,37 @@ class NotingModel(QtCore.QAbstractListModel):
     def addNote(self, note):
         """Add a new note and make it current note."""
         self.currentNote = note
-        index_tmp = self.index(self.rowCount(0) - 1)
-        self.beginInsertRows(index_tmp, index_tmp.row(), index_tmp.row() + 1)
-        self._notes.insert(index_tmp.row() + 1, self.currentNote)
+        # Used this method as is the abstract model implementation.
+        currentLen = self.rowCount(0)
+        # This recieves: index of model, from and to.
+        self.beginInsertRows(self.index(0), currentLen - 1, currentLen)
+        self._notes.insert(currentLen, self.currentNote)
         self.endInsertRows()
-        self.currentIndex = self.index(self.rowCount(0) - 1)
-        #return self.currentIndex
+        self.currentIndex = self.index(currentLen - 1)
+        # return self.currentIndex
+
+    def swapNote(self, direction):
+        """Move the note one up or down."""
+        intIndex = self.currentIndex.row()
+        if direction == 'up' and intIndex > 0:
+            self.beginMoveRows(self.index(0), intIndex,
+                               intIndex, self.index(0), intIndex - 1)
+            self._notes[intIndex], self._notes[intIndex -
+                                               1] = self._notes[intIndex - 1], self._notes[intIndex]
+            self.endMoveRows()
+            self.currentIndex = self.index(intIndex - 1)
+        
+        # This is counter intuitive due to a bug in moving the rows up in the list.
+        elif direction == 'down' and intIndex < self.rowCount(0) - 1:
+            
+            self.beginMoveRows(self.index(0), intIndex + 1,
+                               intIndex + 1, self.index(0), intIndex)
+            self._notes[intIndex], self._notes[intIndex +
+                                               1] = self._notes[intIndex + 1], self._notes[intIndex]
+            
+            self.endMoveRows()
+            self.currentIndex = self.index(intIndex + 1)
+
 
     def saveNoteText(self, noteText):
         """Save the text on the current note."""
