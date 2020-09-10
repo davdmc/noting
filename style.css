@@ -1,0 +1,51 @@
+@charset "UTF-8";
+@font-face {
+    font-family: OpenSans;
+    font-style: normal;
+    src: url(Fonts/OpenSans-Regular.ttf);
+}
+
+@font-face {
+    font-family: OpenSans;
+    font-style: italic;
+    src: url(Fonts/OpenSans-Italic.ttf);
+}
+
+@font-face {
+    font-family: PlayfairDisplay;
+    src: url(Fonts/PlayfairDisplay.ttf);
+}
+
+@page {
+    margin: 2.5cm;
+    @bottom-left{
+        font-family: 'OpenSans';
+        font-size: 9pt;
+        content: 'David Morilla Cabello';
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'PlayfairDisplay';
+}
+
+p, a {
+    font-family: 'OpenSans';
+}
+
+.session-name{
+    font: 42pt;
+    text-align: center;
+}
+
+.date{
+    padding: 2.5mm 0mm 0mm 0mm;
+    text-align: center;
+}
+
+.author{
+    font-style: italic;
+    padding: 2.5mm 0mm 50mm 0mm;
+    text-align: center;
+}
+

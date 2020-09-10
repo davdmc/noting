@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from os import listdir, path
 import json
 from datetime import date
-
+from note import Note 
 
 class NotingModel(QtCore.QAbstractListModel):
     # TODO: Create enums for note status and session status: (saved/notSaved)
@@ -47,6 +47,9 @@ class NotingModel(QtCore.QAbstractListModel):
         self._notes = []
         self.endResetModel()
 
+    def getNotes(self):
+        return self._notes
+        
     def _createSession(self):
         """Create a new session and populate it with its name and todays date."""
         with open(path.join(self._sessionPath), 'w') as json_file:
@@ -147,23 +150,3 @@ class NotingModel(QtCore.QAbstractListModel):
         """Save the text on the current note."""
         self.currentNote.text = noteText
         self._notes[self.currentIndex.row()] = self.currentNote
-
-
-class Note:
-
-    def __init__(self, name, noteType, text):
-
-        self.name = name
-
-        self.text = text
-
-        self.noteType = noteType
-
-        # self.creationDate
-
-        # self.modifyDate
-
-    def toObject(self):
-        return {'name': self.name,
-                'noteType': self.noteType,
-                'text': self.text}

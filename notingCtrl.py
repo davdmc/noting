@@ -1,7 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from os import path
-from notingModel import Note
+from note import Note
 from pathlib import Path
+from exporter import Exporter
 
 class NotingCtrl:
 
@@ -10,9 +11,12 @@ class NotingCtrl:
         self._view = view
         self._model = model
         self._path = defaultPath
-        
-        appPath = path.join(str(Path(__file__).parent.absolute()), "NotingLogo.ico")
-        self._view.setWindowIcon(QtGui.QIcon(appPath))
+        self._appPath = str(Path(__file__).parent.absolute())
+        self._exporter = Exporter()
+
+        self.appPath = str(Path(__file__).parent.absolute())
+        self._view.setWindowIcon(QtGui.QIcon(path.join(self._appPath, "NotingLogo.svg")))
+
         # Choose if you want to open or create a new session.
         method = self._view.selectSessionDialog()
 
@@ -72,6 +76,7 @@ class NotingCtrl:
         self._view.openSession.triggered.connect(lambda: self._initSession("open"))
         self._view.saveSession.triggered.connect(self.saveSession)
         self._view.saveSession.setShortcut(self._view.saveSessionShortcut)
+        self._view.exportPDF.triggered.connect(self.exportPDF)
         
         # Management
         self._view.saveNoteShortcut.activated.connect(self.saveNoteText)
@@ -124,3 +129,9 @@ class NotingCtrl:
     def focusList(self):
         """Focus list when called."""
         self._view.listNotes.setFocus()
+
+    def exportPDF(self):
+        """Function to export the session in PDF format."""
+        ordered = self._view.selectExportOrderForm()
+        path = self._view.exportSessionDialog()
+        self._exporter.export_pdf(self._appPath, path, self._model.sessionInfo, self._model.getNotes(), ordered)

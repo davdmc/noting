@@ -75,6 +75,8 @@ class NotingUi(QtWidgets.QMainWindow):
         self.openSession = self.fileMenu.addAction("Open Session")
         self.saveSession = self.fileMenu.addAction("Save Session")
         self.editSessionData = self.fileMenu.addAction("Session Data")
+        self.exportMenu = self.menuBar.addMenu("Export")
+        self.exportPDF = self.exportMenu.addAction("Export to PDF")
         self.setMenuBar(self.menuBar)
 
         self.statusbar = QtWidgets.QStatusBar(self)
@@ -120,6 +122,25 @@ class NotingUi(QtWidgets.QMainWindow):
             return noteName
         else:
             return None
+
+    def selectExportOrderForm(self):
+        """Export order dialog: List or Note Type"""
+        item, ok = QtWidgets.QInputDialog.getItem(self._centralwidget, 'Exporting order', 'Choose the order for the exported document according to:', ["List", "Note type"],editable=False)
+        
+        if ok:
+            if item == "List":
+                # Unordered
+                return False
+            else:
+                # Ordered
+                return True
+        else:
+            sys.exit()
+
+    def exportSessionDialog(self):
+        """Interface to select the exported file."""
+        name, filter = QtWidgets.QFileDialog.getSaveFileName(self._centralwidget, "Select output file.")
+        return name
 
     def _updateMarkdown(self):
         """Updates the markdown of the text preview."""
