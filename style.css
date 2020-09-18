@@ -1,19 +1,19 @@
-@charset "UTF-8";
+
 @font-face {
     font-family: OpenSans;
     font-style: normal;
-    src: url(Fonts/OpenSans-Regular.ttf);
+    src: url(./fonts/OpenSans-Regular.ttf);
 }
 
 @font-face {
     font-family: OpenSans;
     font-style: italic;
-    src: url(Fonts/OpenSans-Italic.ttf);
+    src: url(./fonts/OpenSans-Italic.ttf);
 }
 
 @font-face {
     font-family: PlayfairDisplay;
-    src: url(Fonts/PlayfairDisplay.ttf);
+    src: url(./fonts/PlayfairDisplay.ttf);
 }
 
 @page {
@@ -27,9 +27,11 @@
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'PlayfairDisplay';
+    font-style: normal;
+    font-kerning: auto;
 }
 
-p, a {
+p, a, li {
     font-family: 'OpenSans';
 }
 

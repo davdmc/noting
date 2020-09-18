@@ -114,7 +114,7 @@ class NotingCtrl:
 
     def saveNoteText(self):
         """Save note text. TODO: Make available to rename note."""
-        noteText = self._view.textEdit.toMarkdown()
+        noteText = self._view.textEdit.toPlainText()
         self._model.saveNoteText(noteText)
 
     def saveSession(self):
