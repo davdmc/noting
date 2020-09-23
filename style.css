@@ -21,7 +21,7 @@
     @bottom-left{
         font-family: 'OpenSans';
         font-size: 9pt;
-        content: 'David Morilla Cabello';
+        content: '';
     }
 }
 
@@ -36,7 +36,7 @@ p, a, li {
 }
 
 .session-name{
-    font: 42pt;
+    font-size: 42pt;
     text-align: center;
 }
 
